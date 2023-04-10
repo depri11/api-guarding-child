@@ -2,6 +2,7 @@ package gc
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,6 +10,12 @@ import (
 
 func (g *GC) RegisterStatussRouter(publicApiRouter, protectedApiRouter *mux.Router) {
 	publicApiRouter.Path("/status").Methods("GET").HandlerFunc(g.StatusHandler)
+	publicApiRouter.Path("/user").Methods("POST").HandlerFunc(g.CreateUserHandler)
+}
+
+type RequestRegisterUser struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (c *GC) StatusHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,4 +30,21 @@ func (c *GC) StatusHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(b)
+}
+
+func (g *GC) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	var payload RequestRegisterUser
+	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(bodyBytes, &payload)
+	if err != nil {
+		sendGenericHTTPError(w, http.StatusInternalServerError, err)
+		return
+	}
+	userId, err := g.NewUser(payload)
+	if err != nil {
+		sendGenericHTTPError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	sendGenericHTTPOk(w, userId)
 }

@@ -23,7 +23,10 @@ type GC struct {
 }
 
 func NewGC(db *gorm.DB) *GC {
-	// usersService := svc.NewService(db)
+	err := db.AutoMigrate(&Users{})
+	if err != nil {
+		log.Println(err)
+	}
 	cache := cache.New(24*time.Hour, 1*time.Hour)
 	g := &GC{
 		Db:     db,
