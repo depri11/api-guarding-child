@@ -30,7 +30,7 @@ jobs:
             - name: Build and Push
               uses: docker/build-push-action@v4
               with:
-                  file: ./Dockerfile
+                  file: ./deployments/Dockerfile
                   push: true
                   tags: ${{secrets.DOCKER_USERNAME}}/api-guarding-child:latest
 
