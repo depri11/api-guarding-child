@@ -1,13 +1,6 @@
 FROM golang:alpine AS builder
-
 WORKDIR /go/src/
-
 COPY . ./
-
-RUN go build -o /tmp/app cmd/api/main.go
-
-WORKDIR /
-
-COPY --from=builder /tmp/app ./
-
-CMD ["./app"]
+RUN go build -o main -ldflags=-X=main.version=${VERSION} cmd/api/main.go 
+COPY --from=builder /go/src/main ./
+CMD ["main"]
