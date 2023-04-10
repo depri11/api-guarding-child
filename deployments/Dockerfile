@@ -1,11 +1,9 @@
 FROM golang:alpine
 
-WORKDIR /app
+WORKDIR /go/src/
 
 COPY . .
 
-RUN go mod tidy
+RUN go build -o main cmd/api/main.go
 
-RUN go build -o binary cmd/api/main.go 
-
-CMD ["binary"]
+CMD ["./main"]
