@@ -48,5 +48,5 @@ jobs:
                   port: ${{ secrets.SERVER_PORT }}
                   script: |
                       whoami
-                      docker pull ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}
-                      docker run -d -p 8080:8080 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+                      docker pull ${{ vars.IMAGE_NAME }}
+                      docker run -d -p 8080:8080 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}:latest
