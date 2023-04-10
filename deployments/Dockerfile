@@ -1,4 +1,4 @@
-FROM golang:bluster
+FROM golang:alpine
 
 WORKDIR /go/src/
 
