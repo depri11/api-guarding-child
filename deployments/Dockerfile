@@ -4,7 +4,7 @@ WORKDIR /go/src/
 
 COPY . .
 
-COPY ./.env .env
+COPY ./env/dev .env
 
 RUN go build -o main cmd/api/main.go
 
