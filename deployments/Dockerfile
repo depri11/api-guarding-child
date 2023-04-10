@@ -1,9 +1,11 @@
-FROM golang:alpine
+FROM golang:bluster
 
 WORKDIR /go/src/
 
 COPY . .
 
-RUN go build -o main cmd/api/main.go
+COPY ./env/dev .env
+
+RUN CGO_ENABLED=1 go build -o main cmd/api/main.go
 
 CMD ["./main"]
