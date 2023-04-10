@@ -1,6 +1,11 @@
-FROM golang:alpine AS builder
-WORKDIR /go/src/
-COPY . ./
-RUN go build -o main -ldflags=-X=main.version=${VERSION} cmd/api/main.go 
-COPY --from=builder /go/src/main ./
-CMD ["main"]
+FROM golang:alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod tidy
+
+RUN go build -o binary cmd/api/main.go 
+
+CMD ["binary"]
