@@ -19,7 +19,7 @@ jobs:
               uses: docker/setup-buildx-action@v2
 
             - name: Install dependencies
-              run: go get .
+              run: go mod tidy
 
             - name: Test with the Go CLI
               run: go test
