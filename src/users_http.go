@@ -40,7 +40,7 @@ func (g *GC) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
 		return
 	}
-	userId, err := g.NewUser(payload)
+	userId, err := g.NewUser(&payload)
 	if err != nil {
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
 		return

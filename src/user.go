@@ -19,7 +19,7 @@ type Users struct {
 	gorm.DeletedAt `json:"deletedAt"`
 }
 
-func (g *GC) NewUser(payload RequestRegisterUser) (userId string, err error) {
+func (g *GC) NewUser(payload *RequestRegisterUser) (userId string, err error) {
 	user := &Users{
 		ID:        uuid.NewString(),
 		Username:  payload.Username,
