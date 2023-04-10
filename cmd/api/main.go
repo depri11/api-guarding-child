@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	gc "gc/src"
 	"log"
@@ -29,7 +30,12 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Println("Starting...")
 
-	_ = godotenv.Load()
+	env := flag.String("env", "", ".env file path")
+	if *env == "" {
+		godotenv.Load()
+	} else {
+		godotenv.Load(*env)
+	}
 
 	db, err := gc.InitDB()
 	if err != nil {
