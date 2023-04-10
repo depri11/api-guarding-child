@@ -1,11 +1,13 @@
-FROM golang:alpine
+FROM golang:alpine AS builder
 
-RUN apk update && apk add --no-cache git
+WORKDIR /go/src/
 
-WORKDIR /app
+COPY . ./
 
-COPY . .
+RUN go build -o /tmp/app cmd/api/main.go
 
-RUN go build -o binary
+WORKDIR /
 
-CMD ["/app/binary"]
+COPY --from=builder /tmp/app ./
+
+CMD ["./app"]
