@@ -49,4 +49,4 @@ jobs:
                   script: |
                       whoami
                       docker pull ${{ vars.IMAGE_NAME }}
-                      docker run -d -p 8080:8080 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}:latest
+                      docker run -d -p 8080:8080 --name ${{ vars.CONTAINER_NAME }}_1 ${{ vars.IMAGE_NAME }}:latest
