@@ -1,0 +1,4 @@
+DB_DRIVER=sqlite
+DB_DSN=db.db
+DB_HOST=
+DB_PORT=
