@@ -4,9 +4,7 @@ WORKDIR /go/src/
 
 COPY . .
 
-COPY ./env/dev .env
-
-RUN export CGO_ENABLED=1
+COPY .env .env
 
 RUN go build -o main cmd/api/main.go
 
