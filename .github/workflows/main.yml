@@ -40,6 +40,7 @@ jobs:
                   username: ${{ secrets.SERVER_USERNAME }}
                   password: ${{ secrets.SERVER_PASSWORD }}
                   port: ${{ secrets.SERVER_PORT }}
-                  script: whoami
+                  script: |
+                      whoami
                       docker pull ${{ vars.IMAGE_NAME }}
                       docker run -d -p 8080:8080 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
