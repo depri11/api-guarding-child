@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"syscall"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -35,8 +36,10 @@ func main() {
 	g := gc.NewGC(db)
 
 	srv := &http.Server{
-		Handler: g.Router,
-		Addr:    ":8080",
+		Handler:      g.Router,
+		Addr:         ":8080",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
 
 	go func() {
@@ -50,6 +53,7 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
+		_ = <-sigs
 		done <- true
 	}()
 	<-done

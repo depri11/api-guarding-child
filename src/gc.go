@@ -31,8 +31,7 @@ func NewGC(db *gorm.DB) *GC {
 		Cache:  cache,
 	}
 
-	// c.RegisterRouter()
-	// c.initRoles()
+	g.RegisterRouter()
 
 	return g
 }
