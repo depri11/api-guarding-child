@@ -3,7 +3,7 @@ package gc
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,8 +11,8 @@ import (
 
 func (g *GC) RegisterStatussRouter(publicApiRouter, protectedApiRouter *mux.Router) {
 	publicApiRouter.Path("/status").Methods("GET").HandlerFunc(g.StatusHandler)
-	publicApiRouter.Path("/user/new").Methods("POST").HandlerFunc(g.CreateUserHandler)
-	publicApiRouter.Path("/user/auth").Methods("POST").HandlerFunc(g.AuthHandler)
+	publicApiRouter.Path("/users/new").Methods("POST").HandlerFunc(g.CreateUserHandler)
+	publicApiRouter.Path("/users/auth").Methods("POST").HandlerFunc(g.AuthHandler)
 
 	protectedApiRouter.Use(g.AuthMiddleware)
 
@@ -20,7 +20,7 @@ func (g *GC) RegisterStatussRouter(publicApiRouter, protectedApiRouter *mux.Rout
 	protectedApiRouter.Path("/users/update/{id}").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
 	protectedApiRouter.Path("/users/delete/{id}").Methods("DELETE").HandlerFunc(g.DeleteUserHandler)
 	protectedApiRouter.Path("/users/update/me").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
-	protectedApiRouter.Path("/users/list").Methods("PUT").HandlerFunc(g.ListUserHandler)
+	protectedApiRouter.Path("/users/list").Methods("GET").HandlerFunc(g.ListUserHandler)
 }
 
 type RequestUser struct {
@@ -50,7 +50,7 @@ func (c *GC) StatusHandler(w http.ResponseWriter, r *http.Request) {
 
 func (g *GC) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var payload RequestUser
-	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	bodyBytes, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(bodyBytes, &payload)
 	if err != nil {
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
@@ -104,7 +104,7 @@ func (g *GC) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var payload RequestUser
-	bodyByte, _ := ioutil.ReadAll(r.Body)
+	bodyByte, _ := io.ReadAll(r.Body)
 
 	err := json.Unmarshal(bodyByte, &payload)
 	if err != nil {
@@ -154,7 +154,7 @@ func (g *GC) ListUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func (g *GC) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	var payload AuthUser
-	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	bodyBytes, _ := io.ReadAll(r.Body)
 	err := json.Unmarshal(bodyBytes, &payload)
 	if err != nil {
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
