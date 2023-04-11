@@ -14,7 +14,7 @@ func TestServiceUser(t *testing.T) {
 		Username:    "test",
 		Password:    "test123",
 		Email:       "test@gmail.com",
-		PhoneNumber: 62822,
+		PhoneNumber: "62822",
 	}
 
 	svc := &GC{

@@ -10,14 +10,14 @@ import (
 )
 
 type Users struct {
-	ID             string    `json:"id" gorm:"primaryKey"`
-	Username       string    `json:"username"`
-	Email          string    `json:"email"`
-	PhoneNumber    int       `json:"phoneNumber"`
-	Password       string    `json:"password"`
-	CreatedAt      time.Time `json:"createdAt"`
-	UpdatedAt      time.Time `json:"updatedAt"`
-	gorm.DeletedAt `json:"deletedAt"`
+	ID          string         `json:"id" gorm:"primaryKey"`
+	Username    string         `json:"username"`
+	Email       string         `json:"email"`
+	PhoneNumber string         `json:"phoneNumber"`
+	Password    string         `json:"password"`
+	CreatedAt   time.Time      `json:"createdAt"`
+	UpdatedAt   time.Time      `json:"updatedAt"`
+	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
 }
 
 type ListUsers struct {

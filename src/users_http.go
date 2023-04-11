@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (g *GC) RegisterStatussRouter(publicApiRouter, protectedApiRouter *mux.Router) {
+func (g *GC) RegisterUsersRouter(publicApiRouter, protectedApiRouter *mux.Router) {
 	publicApiRouter.Path("/status").Methods("GET").HandlerFunc(g.StatusHandler)
 	publicApiRouter.Path("/users/new").Methods("POST").HandlerFunc(g.CreateUserHandler)
 	publicApiRouter.Path("/users/auth").Methods("POST").HandlerFunc(g.AuthHandler)
@@ -27,7 +27,7 @@ type RequestUser struct {
 	Username    string `json:"username"`
 	Password    string `json:"password"`
 	Email       string `json:"email"`
-	PhoneNumber int    `json:"phoneNumber"`
+	PhoneNumber string `json:"phoneNumber"`
 }
 
 type AuthUser struct {
