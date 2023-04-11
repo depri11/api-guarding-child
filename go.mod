@@ -30,6 +30,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.15 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/rs/cors v1.8.3
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect

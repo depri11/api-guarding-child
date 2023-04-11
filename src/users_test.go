@@ -28,7 +28,8 @@ func TestServiceUser(t *testing.T) {
 	user, err := svc.GetUser(userId)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, newUser.Username, user.Username)
-	assert.Equal(t, newUser.Password, user.Password)
+	assert.NotEqual(t, newUser.Password, user.Password)
+	assert.NotEqual(t, "", user.Password)
 	assert.Equal(t, newUser.Email, user.Email)
 	assert.Equal(t, newUser.PhoneNumber, user.PhoneNumber)
 

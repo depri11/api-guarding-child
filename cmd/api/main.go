@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,8 +45,16 @@ func main() {
 
 	g := gc.NewGC(db)
 
+	c := cors.New(cors.Options{
+		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowCredentials: true,
+		Debug:            true,
+	}).Handler(g.Router)
+
 	srv := &http.Server{
-		Handler:      g.Router,
+		Handler:      c,
 		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
