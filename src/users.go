@@ -1,6 +1,7 @@
 package gc
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -25,10 +26,16 @@ type ListUsers struct {
 }
 
 func (g *GC) NewUser(payload *RequestUser) (userId string, err error) {
+	hashPass, err := g.HashPassword(payload.Password)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	user := &Users{
 		ID:          uuid.NewString(),
 		Username:    payload.Username,
-		Password:    payload.Password,
+		Password:    hashPass,
 		Email:       payload.Email,
 		PhoneNumber: payload.PhoneNumber,
 		CreatedAt:   time.Now(),
@@ -60,8 +67,13 @@ func (g *GC) UpdateUser(userId string, payload *RequestUser) (user *Users, err e
 		return
 	}
 
+	hashPass, err := g.HashPassword(payload.Password)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	user.Username = payload.Username
-	user.Password = payload.Password
+	user.Password = hashPass
 	user.Email = payload.Email
 	user.PhoneNumber = payload.PhoneNumber
 
@@ -106,4 +118,33 @@ func (g *GC) ListUser(keyword string, limit, page int) (users ListUsers, err err
 	}
 
 	return
+}
+
+func (g *GC) Auth(payload *AuthUser) (token string, err error) {
+	var user Users
+	err = g.Db.First(&user, "username = ?", payload.Username).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			err = errors.New("please check your username or password")
+		}
+		log.Println(err)
+		return "", err
+	}
+
+	log.Println("user =>", user)
+
+	if !g.CheckPassword(user.Password, payload.Password) {
+		err = errors.New("please check your username or password")
+		log.Println(err)
+		return "", err
+	}
+
+	token, err = g.CreateJWT(user.ID)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	return token, nil
+
 }

@@ -12,11 +12,15 @@ import (
 func (g *GC) RegisterStatussRouter(publicApiRouter, protectedApiRouter *mux.Router) {
 	publicApiRouter.Path("/status").Methods("GET").HandlerFunc(g.StatusHandler)
 	publicApiRouter.Path("/user/new").Methods("POST").HandlerFunc(g.CreateUserHandler)
-	publicApiRouter.Path("/users/get/{id}").Methods("GET").HandlerFunc(g.GetUserHandler)
-	publicApiRouter.Path("/users/update/{id}").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
-	publicApiRouter.Path("/users/delete/{id}").Methods("DELETE").HandlerFunc(g.DeleteUserHandler)
-	publicApiRouter.Path("/users/update/me").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
-	publicApiRouter.Path("/users/list").Methods("PUT").HandlerFunc(g.ListUserHandler)
+	publicApiRouter.Path("/user/auth").Methods("POST").HandlerFunc(g.AuthHandler)
+
+	protectedApiRouter.Use(g.AuthMiddleware)
+
+	protectedApiRouter.Path("/users/get/{id}").Methods("GET").HandlerFunc(g.GetUserHandler)
+	protectedApiRouter.Path("/users/update/{id}").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
+	protectedApiRouter.Path("/users/delete/{id}").Methods("DELETE").HandlerFunc(g.DeleteUserHandler)
+	protectedApiRouter.Path("/users/update/me").Methods("PUT").HandlerFunc(g.UpdateUserHandler)
+	protectedApiRouter.Path("/users/list").Methods("PUT").HandlerFunc(g.ListUserHandler)
 }
 
 type RequestUser struct {
@@ -24,6 +28,11 @@ type RequestUser struct {
 	Password    string `json:"password"`
 	Email       string `json:"email"`
 	PhoneNumber int    `json:"phoneNumber"`
+}
+
+type AuthUser struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (c *GC) StatusHandler(w http.ResponseWriter, r *http.Request) {
@@ -141,4 +150,23 @@ func (g *GC) ListUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httpWrite(w, b)
+}
+
+func (g *GC) AuthHandler(w http.ResponseWriter, r *http.Request) {
+	var payload AuthUser
+	bodyBytes, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(bodyBytes, &payload)
+	if err != nil {
+		sendGenericHTTPError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	token, err := g.Auth(&payload)
+	if err != nil {
+		sendGenericHTTPError(w, http.StatusForbidden, err)
+		return
+	}
+
+	sendGenericHTTPOk(w, token)
+
 }
