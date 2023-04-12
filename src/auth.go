@@ -10,13 +10,13 @@ import (
 )
 
 type claims struct {
-	Id string `json:"id"`
+	UserID string `json:"userId"`
 	jwt.StandardClaims
 }
 
 func (g *GC) CreateJWT(userId string) (string, error) {
 	claims := &claims{
-		Id: userId,
+		UserID: userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 		},

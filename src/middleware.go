@@ -23,12 +23,12 @@ func (g *GC) AuthMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
-		userId, err := g.ValidateJWT(token)
+		claims, err := g.ValidateJWT(token)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}
-		r = r.WithContext(context.WithValue(r.Context(), "userId", userId))
+		r = r.WithContext(context.WithValue(r.Context(), "userId", claims.UserID))
 		next.ServeHTTP(w, r)
 	})
 }

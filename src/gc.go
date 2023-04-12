@@ -17,7 +17,7 @@ type GC struct {
 }
 
 func NewGC(db *gorm.DB) *GC {
-	err := db.AutoMigrate(&Users{})
+	err := db.AutoMigrate(&Users{}, &Child{}, &Location{})
 	if err != nil {
 		log.Println(err)
 	}

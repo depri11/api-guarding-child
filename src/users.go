@@ -131,8 +131,6 @@ func (g *GC) Auth(payload *AuthUser) (token string, err error) {
 		return "", err
 	}
 
-	log.Println("user =>", user)
-
 	if !g.CheckPassword(user.Password, payload.Password) {
 		err = errors.New("please check your username or password")
 		log.Println(err)
