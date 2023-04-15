@@ -57,4 +57,5 @@ func (g *GC) RegisterRouter() {
 	g.RegisterUsersRouter(publicApiRouter, protectedApiRouter)
 	g.RegisterChildRouter(publicApiRouter, protectedApiRouter)
 	g.RegisterLocationsRouter(publicApiRouter, protectedApiRouter)
+	g.RegisterNotificationRouter(publicApiRouter, protectedApiRouter)
 }

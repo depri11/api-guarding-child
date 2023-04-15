@@ -13,6 +13,7 @@ func (g *GC) RegisterUsersRouter(publicApiRouter, protectedApiRouter *mux.Router
 	publicApiRouter.Path("/status").Methods("GET").HandlerFunc(g.StatusHandler)
 	publicApiRouter.Path("/users/new").Methods("POST").HandlerFunc(g.CreateUserHandler)
 	publicApiRouter.Path("/users/auth").Methods("POST").HandlerFunc(g.AuthHandler)
+	publicApiRouter.Path("/users/auth/validate/{token}").Methods("GET").HandlerFunc(g.ValidateTokenHandler)
 
 	protectedApiRouter.Use(g.AuthMiddleware)
 
@@ -168,5 +169,16 @@ func (g *GC) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sendGenericHTTPOk(w, token)
+
+}
+
+func (g *GC) ValidateTokenHandler(w http.ResponseWriter, r *http.Request) {
+	token := mux.Vars(r)["token"]
+	_, err := g.ValidateJWT(token)
+	if err != nil {
+		sendGenericHTTPError(w, http.StatusInternalServerError, err)
+		return
+	}
+	sendGenericHTTPOk(w, "ok")
 
 }

@@ -20,12 +20,12 @@ func (g *GC) AuthMiddleware(next http.Handler) http.Handler {
 		if token == "" {
 			err := fmt.Errorf("invalid token")
 			log.Println(err)
-			w.WriteHeader(http.StatusForbidden)
+			sendGenericHTTPError(w, http.StatusForbidden, err)
 			return
 		}
 		claims, err := g.ValidateJWT(token)
 		if err != nil {
-			w.WriteHeader(http.StatusForbidden)
+			sendGenericHTTPError(w, http.StatusForbidden, err)
 			return
 		}
 		r = r.WithContext(context.WithValue(r.Context(), "userId", claims.UserID))

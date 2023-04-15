@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 func (g *GC) RegisterChildRouter(publicApiRouter, protectedApiRouter *mux.Router) {
@@ -21,8 +22,8 @@ func (g *GC) RegisterChildRouter(publicApiRouter, protectedApiRouter *mux.Router
 }
 
 type RequestChild struct {
-	PhoneNumber string `json:"phone_number"`
-	ParentId    string `json:"parent_id"`
+	PhoneNumber string `json:"phoneNumber"`
+	ParentId    string `json:"parentId"`
 }
 
 func (g *GC) CreateChildHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,13 +41,26 @@ func (g *GC) CreateChildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	payload.ParentId = parentId
-	userId, err := g.NewChild(&payload)
+
+	var childId string
+
+	child, err := g.GetChild(payload.PhoneNumber)
+	if err == gorm.ErrRecordNotFound {
+		childId, err = g.NewChild(&payload)
+		if err != nil {
+			sendGenericHTTPError(w, http.StatusInternalServerError, err)
+			return
+		}
+		sendGenericHTTPOk(w, childId)
+		return
+	}
+
+	b, err := json.Marshal(child)
 	if err != nil {
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
 		return
 	}
-
-	sendGenericHTTPOk(w, userId)
+	httpWrite(w, b)
 }
 
 func (g *GC) GetChildHandler(w http.ResponseWriter, r *http.Request) {
@@ -54,6 +68,10 @@ func (g *GC) GetChildHandler(w http.ResponseWriter, r *http.Request) {
 
 	child, err := g.GetChild(id)
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			sendGenericHTTPError(w, http.StatusNotFound, err)
+			return
+		}
 		sendGenericHTTPError(w, http.StatusInternalServerError, err)
 		return
 	}

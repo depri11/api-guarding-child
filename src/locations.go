@@ -9,14 +9,14 @@ import (
 )
 
 type Location struct {
-	ID              string         `json:"id"`
-	ParentID        string         `json:"parent_id"`
-	ChildID         string         `json:"child_id"`
-	Lat             float64        `json:"lat"`
-	Long            float64        `json:"long"`
-	CurrentLocation string         `json:"current_location"`
-	CreatedAt       time.Time      `json:"created_at"`
-	DeletedAt       gorm.DeletedAt `json:"deleted_at"`
+	ID        string         `json:"id" gorm:"primaryKey"`
+	ParentID  string         `json:"parentId"`
+	ChildID   string         `json:"childId"`
+	Lat       float64        `json:"lat"`
+	Long      float64        `json:"long"`
+	Address   string         `json:"address"`
+	CreatedAt time.Time      `json:"createdAt"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt"`
 }
 
 type HistoryLocation struct {
@@ -31,6 +31,7 @@ func (g *GC) NewLocation(payload *RequestLocation) (id string, err error) {
 		ParentID:  payload.ParentID,
 		Lat:       payload.Lat,
 		Long:      payload.Long,
+		Address:   payload.Address,
 		CreatedAt: time.Now(),
 	}
 

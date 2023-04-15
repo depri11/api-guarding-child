@@ -10,14 +10,13 @@ import (
 )
 
 type GC struct {
-	Db       *gorm.DB
-	Router   *mux.Router
-	Fixtures Fixtures
-	Cache    *cache.Cache
+	Db     *gorm.DB
+	Router *mux.Router
+	Cache  *cache.Cache
 }
 
 func NewGC(db *gorm.DB) *GC {
-	err := db.AutoMigrate(&Users{}, &Child{}, &Location{})
+	err := db.AutoMigrate(&Users{}, &Child{}, &Location{}, &Notification{})
 	if err != nil {
 		log.Println(err)
 	}

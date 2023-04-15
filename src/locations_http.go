@@ -18,10 +18,11 @@ func (g *GC) RegisterLocationsRouter(publicApiRouter, protectedApiRouter *mux.Ro
 }
 
 type RequestLocation struct {
-	ParentID string  `json:"parent_id"`
-	ChildID  string  `json:"child_id"`
+	ParentID string  `json:"parentId"`
+	ChildID  string  `json:"childId"`
 	Lat      float64 `json:"lat"`
 	Long     float64 `json:"long"`
+	Address  string  `json:"address"`
 }
 
 func (g *GC) CreateLocationHandler(w http.ResponseWriter, r *http.Request) {

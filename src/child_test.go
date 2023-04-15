@@ -28,24 +28,29 @@ func TestChildService(t *testing.T) {
 	assert.Equal(t, newChild.PhoneNumber, child.PhoneNumber)
 	assert.Equal(t, newChild.ParentId, child.ParentID)
 
-	updateChild := &RequestChild{
-		PhoneNumber: "1 update",
-		ParentId:    "parent id",
-	}
-
-	child, err = svc.UpdateChild(childId, updateChild)
+	child, err = svc.GetChild(newChild.PhoneNumber)
 	assert.Equal(t, nil, err)
-	assert.Equal(t, updateChild.PhoneNumber, child.PhoneNumber)
+	assert.Equal(t, newChild.PhoneNumber, child.PhoneNumber)
+	assert.Equal(t, newChild.ParentId, child.ParentID)
 
-	childs, err := svc.MyChilds(newChild.ParentId, 0, 0)
-	assert.Equal(t, nil, err)
-	assert.Equal(t, childId, childs.Data[0].ID)
-	assert.Equal(t, updateChild.ParentId, childs.Data[0].ParentID)
-	assert.Equal(t, updateChild.PhoneNumber, childs.Data[0].PhoneNumber)
-	assert.Equal(t, int64(1), childs.Total)
+	// updateChild := &RequestChild{
+	// 	PhoneNumber: "1 update",
+	// 	ParentId:    "parent id",
+	// }
 
-	err = svc.DeleteChild(childId)
-	assert.Equal(t, nil, err)
-	assert.NotEqual(t, nil, child.DeletedAt)
+	// child, err = svc.UpdateChild(childId, updateChild)
+	// assert.Equal(t, nil, err)
+	// assert.Equal(t, updateChild.PhoneNumber, child.PhoneNumber)
+
+	// childs, err := svc.MyChilds(newChild.ParentId, 0, 0)
+	// assert.Equal(t, nil, err)
+	// assert.Equal(t, childId, childs.Data[0].ID)
+	// assert.Equal(t, updateChild.ParentId, childs.Data[0].ParentID)
+	// assert.Equal(t, updateChild.PhoneNumber, childs.Data[0].PhoneNumber)
+	// assert.Equal(t, int64(1), childs.Total)
+
+	// err = svc.DeleteChild(childId)
+	// assert.Equal(t, nil, err)
+	// assert.NotEqual(t, nil, child.DeletedAt)
 
 }

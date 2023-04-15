@@ -9,12 +9,12 @@ import (
 )
 
 type Child struct {
-	ID          string         `json:"id"`
-	ParentID    string         `json:"parent_id"`
-	PhoneNumber string         `json:"phone_number"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `json:"deleted_at"`
+	ID          string         `json:"id" gorm:"primaryKey"`
+	ParentID    string         `json:"parentId"`
+	PhoneNumber string         `json:"phoneNumber"`
+	CreatedAt   time.Time      `json:"createdAt"`
+	UpdatedAt   time.Time      `json:"updatedAt"`
+	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
 }
 
 type ListMyChilds struct {
@@ -40,7 +40,7 @@ func (g *GC) NewChild(payload *RequestChild) (userId string, err error) {
 }
 
 func (g *GC) GetChild(childId string) (child *Child, err error) {
-	err = g.Db.First(&child, "id = ?", childId).Error
+	err = g.Db.First(&child, "id = ? OR phone_number = ?", childId, childId).Error
 	if err != nil {
 		log.Println(err)
 		return
