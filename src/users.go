@@ -15,8 +15,8 @@ type Users struct {
 	Email       string         `json:"email"`
 	PhoneNumber string         `json:"phoneNumber"`
 	Password    string         `json:"password"`
-	CreatedAt   time.Time      `json:"createdAt"`
-	UpdatedAt   time.Time      `json:"updatedAt"`
+	CreatedAt   int64          `json:"createdAt"`
+	UpdatedAt   int64          `json:"updatedAt"`
 	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
 }
 
@@ -38,8 +38,8 @@ func (g *GC) NewUser(payload *RequestUser) (userId string, err error) {
 		Password:    hashPass,
 		Email:       payload.Email,
 		PhoneNumber: payload.PhoneNumber,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		CreatedAt:   time.Now().UnixMilli(),
+		UpdatedAt:   time.Now().UnixMilli(),
 	}
 	err = g.Db.Create(&user).Error
 	if err != nil {

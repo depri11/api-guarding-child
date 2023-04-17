@@ -15,7 +15,7 @@ type Location struct {
 	Lat       float64        `json:"lat"`
 	Long      float64        `json:"long"`
 	Address   string         `json:"address"`
-	CreatedAt time.Time      `json:"createdAt"`
+	CreatedAt int64          `json:"createdAt"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt"`
 }
 
@@ -32,7 +32,7 @@ func (g *GC) NewLocation(payload *RequestLocation) (id string, err error) {
 		Lat:       payload.Lat,
 		Long:      payload.Long,
 		Address:   payload.Address,
-		CreatedAt: time.Now(),
+		CreatedAt: time.Now().UnixMilli(),
 	}
 
 	err = g.Db.Create(&location).Error

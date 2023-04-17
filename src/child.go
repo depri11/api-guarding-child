@@ -12,8 +12,8 @@ type Child struct {
 	ID          string         `json:"id" gorm:"primaryKey"`
 	ParentID    string         `json:"parentId"`
 	PhoneNumber string         `json:"phoneNumber"`
-	CreatedAt   time.Time      `json:"createdAt"`
-	UpdatedAt   time.Time      `json:"updatedAt"`
+	CreatedAt   int64          `json:"createdAt"`
+	UpdatedAt   int64          `json:"updatedAt"`
 	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
 }
 
@@ -27,8 +27,8 @@ func (g *GC) NewChild(payload *RequestChild) (userId string, err error) {
 		ID:          uuid.NewString(),
 		PhoneNumber: payload.PhoneNumber,
 		ParentID:    payload.ParentId,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		CreatedAt:   time.Now().UnixMilli(),
+		UpdatedAt:   time.Now().UnixMilli(),
 	}
 	err = g.Db.Create(&child).Error
 	if err != nil {
